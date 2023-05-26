@@ -1,10 +1,10 @@
 import db from "../config/database.js";
 
 export async function getAllFlights() {
-  return await db.query(`SELECT * FROM flights`);
+  return await db.query(`SELECT * FROM flights;`);
 }
 export async function getFlightByID(id) {
-  return await db.query(`SELECT * FROM flights WHERE id = $1`, [id]);
+  return await db.query(`SELECT * FROM flights WHERE id = $1;`, [id]);
 }
 
 export async function addFlight(body) {
