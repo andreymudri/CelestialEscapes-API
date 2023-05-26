@@ -1,11 +1,23 @@
 import db from "../config/database.js";
 
 export async function getAllHotels() {
-  return await db.query(`SELECT * FROM hotels;`);
+  return await db.query(`
+      SELECT hotels.id, hotels.name, hotels.description, cities.name AS city, hotels.img_url
+      FROM hotels
+      JOIN cities ON hotels.city = cities.id;
+    `);
 }
 
 export async function getHotelID(id) {
-  return await db.query(`SELECT * FROM hotels WHERE id = $1;`, [id]);
+  return await db.query(
+    `
+      SELECT hotels.*, cities.name AS city
+      FROM hotels
+      JOIN cities ON hotels.city = cities.id
+      WHERE hotels.id = $1;
+    `,
+    [id]
+  );
 }
 
 export async function addHotel(body) {

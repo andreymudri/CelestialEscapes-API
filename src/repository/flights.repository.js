@@ -1,11 +1,27 @@
 import db from "../config/database.js";
 
 export async function getAllFlights() {
-  return await db.query(`SELECT * FROM flights;`);
+  return await db.query(`
+    SELECT flights.id, flights.name, flights.description, flights.price, flights.start_date, flights.end_date,
+           companies.name AS company, destinations.name AS destination, departures.name AS departure
+    FROM flights
+    JOIN cities AS destinations ON flights.destination_id = destinations.id
+    JOIN cities AS departures ON flights.departure_id = departures.id
+    JOIN companies ON flights.company_id = companies.id;
+  `);
 }
+
 export async function getFlightByID(id) {
-  return await db.query(`SELECT * FROM flights WHERE id = $1;`, [id]);
+  return await db.query(`
+    SELECT flights.*, companies.name, destinations.name AS destination, departures.name AS departure
+    FROM flights
+    JOIN cities AS destinations ON flights.destination_id = destinations.id
+    JOIN cities AS departures ON flights.departure_id = departures.id
+    JOIN companies ON flights.company_id = companies.id
+    WHERE flights.id = $1;
+  `, [id]);
 }
+
 
 export async function addFlight(body) {
   return await db.query(
