@@ -11,9 +11,10 @@ export async function getAllHotels() {
 export async function getHotelID(id) {
   return await db.query(
     `
-      SELECT hotels.*, cities.name AS city
+      SELECT hotels.*, cities.name AS city, rooms.*
       FROM hotels
       JOIN cities ON hotels.city = cities.id
+      JOIN rooms ON rooms.hotel_id = hotels.id
       WHERE hotels.id = $1;
     `,
     [id]
