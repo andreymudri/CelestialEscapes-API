@@ -4,6 +4,7 @@
   "description": "",
   "type": "module",
   "main": "index.js",
+
   "scripts": {
     "deploy": "npx prisma migrate deploy",
     "start": "node src/app.js",
