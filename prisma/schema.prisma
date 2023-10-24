@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model cities {
+  id                                     Int       @id @default(autoincrement())
+  name                                   String    @db.VarChar(255)
+  country                                String    @db.VarChar(255)
+  img_url                                String?   @db.VarChar(255)
+  flights_flights_departure_idTocities   flights[] @relation("flights_departure_idTocities")
+  flights_flights_destination_idTocities flights[] @relation("flights_destination_idTocities")
+  hotels                                 hotels[]
+}
+
+model companies {
+  id      Int       @id @default(autoincrement())
+  name    String    @db.VarChar(255)
+  country String    @db.VarChar(255)
+  website String?   @db.VarChar(255)
+  flights flights[]
+}
+
+model flights {
+  id                                    Int        @id @default(autoincrement())
+  name                                  String     @db.VarChar(255)
+  description                           String?
+  price                                 Decimal    @default(0) @db.Decimal(10, 2)
+  start_date                            DateTime   @db.Date
+  end_date                              DateTime   @db.Date
+  company_id                            Int?
+  destination_id                        Int?
+  departure_id                          Int?
+  companies                             companies? @relation(fields: [company_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cities_flights_departure_idTocities   cities?    @relation("flights_departure_idTocities", fields: [departure_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cities_flights_destination_idTocities cities?    @relation("flights_destination_idTocities", fields: [destination_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model hotels {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(255)
+  description String?
+  city        Int?
+  img_url     String? @db.VarChar(255)
+  cities      cities? @relation(fields: [city], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  rooms       rooms[]
+}
+
+model rooms {
+  id              Int     @id @default(autoincrement())
+  room_type       String  @db.VarChar(255)
+  description     String?
+  capacity        Int
+  price_per_night Decimal @db.Decimal(10, 2)
+  img_url         String? @db.VarChar(255)
+  hotel_id        Int?
+  hotels          hotels? @relation(fields: [hotel_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique @db.VarChar(50)
+  email      String   @unique @db.VarChar(50)
+  password   String   @db.VarChar(255)
+  created_at DateTime @default(now()) @db.Timestamp(6)
+}
